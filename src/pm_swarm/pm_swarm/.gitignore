@@ -1,0 +1,21 @@
+# Ignore everything
+*
+
+# But NOT these:
+!.gitignore
+!src/pm_swarm/
+!src/pm_swarm/**
+
+# ROS 2 build artifacts (optional cleanup)
+build/
+install/
+log/
+
+# Ignore all other folders in src
+src/*
+!src/pm_swarm/
+!src/pm_swarm/**
+
+# Python cache
+__pycache__/
+*.pyc

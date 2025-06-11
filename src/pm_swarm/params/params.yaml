@@ -1,0 +1,35 @@
+mavlink_ros2_connection_drone1: 
+  ros__parameters: 
+    mavlink_endpoint: "udp:127.0.0.1:14561" 
+    heartbeat_topic: "/drone1/heartbeat_mode" 
+    battery_topic: "/drone1/battery_status" 
+    source_system: 51 
+    target_system: 1 
+    target_component: 1 
+ 
+mavlink_ros2_arm_drone1: 
+  ros__parameters: 
+    mavlink_endpoint: "udp:127.0.0.1:14561" 
+    heartbeat_topic: "/drone1/heartbeat_mode" 
+    battery_topic: "/drone1/battery_status" 
+    source_system: 51 
+    target_system: 1 
+    target_component: 1 
+ 
+mavlink_ros2_connection_drone2: 
+  ros__parameters: 
+    mavlink_endpoint: "udp:127.0.0.1:14562" 
+    heartbeat_topic: "/drone2/heartbeat_mode" 
+    battery_topic: "/drone2/battery_status" 
+    source_system: 52 
+    target_system: 2 
+    target_component: 1 
+ 
+mavlink_ros2_arm_drone2: 
+  ros__parameters: 
+mavlink_endpoint: "udp:127.0.0.1:14562" 
+heartbeat_topic: "/drone2/heartbeat_mode" 
+battery_topic: "/drone2/battery_status" 
+source_system: 52 
+target_system: 2 
+target_component: 1 
