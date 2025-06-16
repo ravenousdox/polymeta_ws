@@ -31,8 +31,6 @@ def send_message(msg, mav, pub):
     Send a mavlink message 
     """ 
     msg.pack(mav) 
-167 
- 
     rosmsg = convert_to_rosmsg(msg) 
     pub.publish(rosmsg) 
  
@@ -85,8 +83,6 @@ def set_home_position(mav, pub):
             altitude, 
             x, 
             y, 
-168 
- 
             z, 
             q, 
             approach_x, 
