@@ -1,24 +1,49 @@
-# pm_swarm Workspace
+# MAVLink-ROS2 Dual Drone Bridge for ArduPilot on ROS 2 Humble
 
-This repository contains a minimal ROS 2 Humble workspace for experiments with multiple ArduPilot quadcopters on Ubuntu 22.04. The single package `pm_swarm` provides launch and parameter files for running MAVLink bridge nodes.
+This workspace provides a minimal setup for running two MAVLink bridge nodes against ArduPilot-based drones. It targets ROS 2 Humble on Ubuntu 22.04 and assumes a MAVLink router or MAVProxy instance is forwarding telemetry.
 
-## Package Overview
+## Capabilities
+- Publishes periodic heartbeat messages and battery information for each drone
+- Streams telemetry from ArduPilot to ROS 2 topics
+- Offers services for arming and mode control
+- Uses separate namespaces (`/drone1`, `/drone2`) to avoid topic conflicts
 
-The `pm_swarm` package is a Python package that declares dependencies on standard ROS 2 interfaces and `pymavlink`. Metadata is defined in `package.xml` and `setup.py`, which lists `mavlink_ros2_arm` as the provided console script.
+## System Requirements
+- Ubuntu 22.04
+- ROS 2 Humble installed and sourced
+- ArduPilot >= 4.5 running with MAVLink forwarding
+- MAVLink-router or MAVProxy for UDP routing
+- Python >= 3.10 with the `pymavlink` library
 
-The package directory `pm_swarm/pm_swarm` is currently empty, so the repository focuses on configuration rather than application logic. Launch files and parameter samples are stored in the `launch` and `params` folders respectively.
+## Setup
+Clone and build the workspace:
+```bash
+git clone <repository_url> polymeta_ws
+cd polymeta_ws
+rosdep install --from-paths src -yi
+colcon build
+source install/setup.bash
+```
 
-## Launch Configuration
+## Launch and Usage
+Start the bridge nodes:
+```bash
+ros2 launch pm_swarm dual_drone_mavlink_bridge.launch.py
+```
+Arm each drone via the provided services:
+```bash
+ros2 service call /drone1/arm_drone std_srvs/srv/SetBool '{data: true}'
+ros2 service call /drone2/arm_drone std_srvs/srv/SetBool '{data: true}'
+```
 
-`dual_drone_mavlink_bridge.launch.py` starts two bridge nodes. Each node connects over UDP and publishes heartbeats and battery status under its own namespace. The first node uses port `14561` and the second uses port `14562`. Both nodes are returned in the launch description so running the launch file will bring up both bridges.
+## Topics and Messages
+- `/drone1/heartbeat_mode`, `/drone2/heartbeat_mode` – heartbeat and mode strings
+- `/drone1/battery_status`, `/drone2/battery_status` – `sensor_msgs/BatteryState`
 
-The parameter file `params.yaml` provides matching settings. For each drone there is a `mavlink_endpoint` entry, along with heartbeat and battery topics and the MAVLink system identifiers.
-
-## Building and Running
-
-After installing ROS 2 Humble and its build tools, build the workspace with `colcon build` and source the generated environment. Running `ros2 launch pm_swarm dual_drone_mavlink_bridge.launch.py` will start the two bridge nodes configured in the launch file. They are meant to communicate with simulated or real drones over the specified UDP ports.
+The bridge listens for service requests and forwards MAVLink commands to the corresponding vehicle while mirroring basic status over ROS 2 topics.
 
 ## Tests
-
-The package includes simple test suites that run style and linter checks using `ament_flake8`, `ament_pep257`, and copyright verification. Tests can be executed with `python3 -m pytest`.
-
+Run the Python test suite with:
+```bash
+python3 -m pytest
+```
